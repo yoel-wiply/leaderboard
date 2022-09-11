@@ -8,8 +8,7 @@ import secondPlace from "../../images/secondPlace.png";
 import thirdPlace from "../../images/thirdPlace.png";
 
 const TableRow = (props) => {
-  const { alltime, img, recent, username } = props.rowData;
-  const fccURL = `http://www.freecodecamp.com/${username}`;
+  const { alltime, img, score, username } = props.rowData;
 
   return (
     <tr>
@@ -26,17 +25,15 @@ const TableRow = (props) => {
       </td>
 
       <td align="left">
-        <a href={fccURL} target="_blank">
+  
           <img
-            className="camper-image"
+            className="camper-image inline-block"
             src={userleaderBoards}
             alt="no img"
           ></img>
-          <span className="camper-name">{username}</span>
-        </a>
+          <span className="camper-name inline-block">{username}</span>
       </td>
-      <td>{recent}</td>
-      <td>{alltime}</td>
+      <td>{score}</td>
     </tr>
   );
 };
