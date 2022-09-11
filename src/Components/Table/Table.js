@@ -3,13 +3,14 @@ import React, { Component } from "react";
 import TableRow from "../TableRow/TableRow";
 import ToSortHeader from "../ToSortHeader/ToSortHeader";
 import "./Table.css";
+import firstPlace from "../../images/firstPlace.jpg";
 
-const Table = ({players}) => {
+const Table = ({ players }) => {
   const sortByMapping = [
     // {type: 'past30Days', heading: 'Points in past 30 days'},
-    {type: 'score', heading: 'Score'},
+    { type: "score", heading: "Score" },
   ];
-  
+
   const data = [
     {
       alltime: 100,
@@ -88,9 +89,8 @@ const Table = ({players}) => {
       img: null,
       recent: 30,
       username: "Yoel",
-    }
+    },
   ];
-
 
   const handleSort = (sortType) => {
     if (sortType === "past30Days") {
@@ -125,21 +125,37 @@ const Table = ({players}) => {
   };
 
   return (
-
-    <table>
-      <tbody>
-        <tr>
-          <th scope="col">#Rank</th>
-          <th scope="col">Username</th>
-          { sortByMapping.map((toSortBy, i) => {
-     return <ToSortHeader key={i} sortBy={toSortBy.type} heading={toSortBy.heading} onClick={handleSort} />
-     })}
-        </tr>
-        {players.map((rowData, i) => {
-          return <TableRow key={i} id={i + 1} rowData={rowData} />;
-        })}
-      </tbody>
-    </table>
+    <div className="overflow-table rounded-lg col-lg-12 overflow-auto h-96 lg:h-128">
+      <table>
+        <tbody>
+          <tr>
+            <th scope="col">#Rank</th>
+            <th scope="col">Username</th>
+            {sortByMapping.map((toSortBy, i) => {
+              return (
+                <ToSortHeader
+                  key={i}
+                  sortBy={toSortBy.type}
+                  heading={toSortBy.heading}
+                  onClick={handleSort}
+                />
+              );
+            })}
+          </tr>
+          {players.map((rowData, i) => {
+            return <TableRow key={i} id={i + 1} rowData={rowData} />;
+          })}
+        </tbody>
+      </table>
+      <footer className="grid place-items-center">
+        <div className="App-header box-border w-1/2 bottom-4 border-4  relative rounded-lg flex space-x-8 justify-center bg-wiply-theme ">
+          <img src={firstPlace} className="w-1/6" alt="logo" />
+          <span className="relative self-center">
+            Top Score: {players && players[0]?.score}
+          </span>
+        </div>
+      </footer>
+    </div>
   );
 };
 
