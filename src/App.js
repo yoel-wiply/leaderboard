@@ -65,19 +65,18 @@ function App() {
 
           temp =  temp.sort((playerA, playerB) => playerB.score - playerA.score);
 
-          console.log(temp)
-
           const playerRank = (player) => player.email === currentPlayer.email
 
-
-          const rank = temp.findIndex(playerRank)
-          console.log(temp)
-          console.log(rank)
+          const rank = temp.findIndex(playerRank) + 1
+  
 
 
           if (temp.length >= 4) {
-            // if(currentPlayer === temp[0] || currentPlayer  === temp[1]  || currentPlayer  === temp[1])
-            setLocalPlayers([{...temp[0], rank: 1}, {...temp[1], rank: 2}, {...temp[2], rank: 3}, {...currentPlayer, rank}]);
+            if(currentPlayer === temp[0] || currentPlayer  === temp[1]  || currentPlayer  === temp[1]){
+              setLocalPlayers([{...temp[0], rank: 1}, {...temp[1], rank: 2}, {...temp[2], rank: 3}]);
+            }else{
+              setLocalPlayers([{...temp[0], rank: 1}, {...temp[1], rank: 2}, {...temp[2], rank: 3}, {...currentPlayer, rank}]);
+            }
           } else {
             console.log(temp);
             setLocalPlayers(temp);
@@ -114,18 +113,18 @@ function App() {
             </header>
           </div>
           <div className="grid place-items-center ">
-            <div className="main-header rounded-lg border-2 bg-wiply-theme text-center relative w-3/4 lg:w-1/2 mt-5 lg:h-12">
-              <div className=" inline-block top-2/4 bottom-2/4 absolute">
+            <div className=" rounded-lg border-2 bg-wiply-theme mt-10 w-1/2">
+              <div className=" inline-block float-left align-middle	">
                 Leaderboards!
               </div>
               <div className=" inline-block float-right ">
                 {" "}
                 <button
-                  className="w-16 h-16 "
+                  className="w-32 h-16 "
                   onClick={() => setFullLeaderboard(!fullLeaderboard)}
                 >
                   {" "}
-                  header
+                  View Full Leaderboards
                 </button>
               </div>
             </div>
