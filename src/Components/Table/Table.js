@@ -11,86 +11,6 @@ const Table = ({ players }) => {
     { type: "score", heading: "Score" },
   ];
 
-  const data = [
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-    {
-      alltime: 100,
-      img: null,
-      recent: 30,
-      username: "Yoel",
-    },
-  ];
 
   const handleSort = (sortType) => {
     if (sortType === "past30Days") {
@@ -147,14 +67,14 @@ const Table = ({ players }) => {
           })}
         </tbody>
       </table>
-      <footer className="grid place-items-center">
+      {/* <footer className="grid place-items-center">
         <div className="App-header box-border w-1/2 bottom-4 border-4  relative rounded-lg flex space-x-8 justify-center bg-wiply-theme ">
           <img src={firstPlace} className="w-1/6" alt="logo" />
           <span className="relative self-center">
             Top Score: {players && players[0]?.score}
           </span>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 };

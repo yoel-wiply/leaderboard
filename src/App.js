@@ -8,28 +8,33 @@ import { db } from "./firebase";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-
 function App() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fullLeaderboard, setFullLeaderboard] = useState(false);
+  const [localPlayers, setLocalPlayers] = useState([]);
+
+  let params = new URLSearchParams(document.location.search);
+
+  const currentPlayer = {
+    username: params.get("username") || "test",
+    email: params.get('email') || 'test123@gmail.com',
+    score: params.get("score") || '4',
+  };
 
   useEffect(() => {
     // This creates reference to firebase firestores collection of player documents
     //  console.log(gapi.client)
-    let params = new URLSearchParams(document.location.search);
 
-    const id = params.get("gameId")
-
-      setTimeout(() => {
-        getValues(
-          window.client,
-          "1gowLOYDNh91TJdiw99aFbsAmtHZuoQBH-mJtnPjanJ8",
-          "Sheet1",
-          null
-        );
-        setLoading(false)
-        
-      }, 1000);
+    setTimeout(() => {
+      getValues(
+        window.client,
+        "1gowLOYDNh91TJdiw99aFbsAmtHZuoQBH-mJtnPjanJ8",
+        "Sheet1",
+        null
+      );
+      setLoading(false);
+    }, 1000);
   }, []);
 
   function getValues(client, spreadsheetId, range, callback) {
@@ -45,18 +50,41 @@ function App() {
           console.log(result);
 
           // organize player leaderboards
-          result.shift()
+          result.shift();
 
-          setPlayers(
-            result
-              .map((player) => {
-                return {
-                  username: player[0],
-                  score: player[2],
-                };
-              })
-              .sort((playerA, playerB) => playerB.score - playerA.score)
-          );
+          let temp = result
+            .map((player) => {
+              return {
+                username: player[0],
+                email: player[1],
+                score: player[2],
+              };
+            })
+          
+          temp.push(currentPlayer)
+
+          temp =  temp.sort((playerA, playerB) => playerB.score - playerA.score);
+
+          console.log(temp)
+
+          const playerRank = (player) => player.email === currentPlayer.email
+
+
+          const rank = temp.findIndex(playerRank)
+          console.log(temp)
+          console.log(rank)
+
+
+          if (temp.length >= 4) {
+            // if(currentPlayer === temp[0] || currentPlayer  === temp[1]  || currentPlayer  === temp[1])
+            setLocalPlayers([{...temp[0], rank: 1}, {...temp[1], rank: 2}, {...temp[2], rank: 3}, {...currentPlayer, rank}]);
+          } else {
+            console.log(temp);
+            setLocalPlayers(temp);
+          }
+
+          setPlayers(temp);
+
 
           const numRows = result.values ? result.values.length : 0;
           console.log(`${numRows} rows retrieved.`);
@@ -68,7 +96,7 @@ function App() {
     }
   }
   return (
-    loading ? <Spinner/> : <div
+    <div
       className="App h-screen"
       style={{
         backgroundImage: `url(${leaderboardBg})`,
@@ -76,23 +104,37 @@ function App() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="relative top-12">
-        <div className="grid place-items-center lg:top-4">
-          <header className="App-header rounded-lg border-2 lg:border-4 w-3/4 lg:w-1/2 bg-wiply-theme mx-8 h-16 lg:h-32 flex justify-center">
-            <img src={logo} className="w-1/4 lg:w-1/6" alt="logo" />
-          </header>
-        </div>
-        <div className="grid place-items-center ">
-          <div className=" w-3/4 lg:w-1/2 h-16 relative">
-            <div className="main-header rounded-lg border-2 bg-wiply-theme inset-x-0 bottom-0 absolute lg:h-12">
-              Leaderboard
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="relative top-12">
+          <div className="grid place-items-center lg:top-4">
+            <header className="App-header rounded-lg border-2 lg:border-4 w-3/4 lg:w-1/2 bg-wiply-theme mx-8 h-16 lg:h-32 flex justify-center">
+              <img src={logo} className="w-1/4 lg:w-1/6" alt="logo" />
+            </header>
+          </div>
+          <div className="grid place-items-center ">
+            <div className="main-header rounded-lg border-2 bg-wiply-theme text-center relative w-3/4 lg:w-1/2 mt-5 lg:h-12">
+              <div className=" inline-block top-2/4 bottom-2/4 absolute">
+                Leaderboards!
+              </div>
+              <div className=" inline-block float-right ">
+                {" "}
+                <button
+                  className="w-16 h-16 "
+                  onClick={() => setFullLeaderboard(!fullLeaderboard)}
+                >
+                  {" "}
+                  header
+                </button>
+              </div>
+            </div>
+            <div className=" w-3/4 lg:w-1/2">
+              <Table players={fullLeaderboard ? players : localPlayers} />
             </div>
           </div>
-          <div className=" w-3/4 lg:w-1/2">
-            <Table players={players} />
-          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

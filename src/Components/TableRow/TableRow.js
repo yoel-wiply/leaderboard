@@ -8,20 +8,29 @@ import secondPlace from "../../images/secondPlace.png";
 import thirdPlace from "../../images/thirdPlace.png";
 
 const TableRow = (props) => {
-  const { alltime, img, score, username } = props.rowData;
+  const { alltime, img, score, username, rank } = props.rowData;
 
   return (
     <tr>
       <td>
-        {props.id == 1 ? (
+        {rank ?( rank == 1 ? (
           <img className="camper-image" src={firstPlace} alt="no img" />
-        ) : props.id == 2 ? (
+        ) : rank == 2 ? (
+          <img className="camper-image" src={secondPlace} alt="no img" />
+        ) : rank === 3 ? (
+          <img className="camper-image" src={thirdPlace} alt="no img" />
+        ) : (
+          rank
+        ) ) : 
+        (props.id === 1 ? (
+          <img className="camper-image" src={firstPlace} alt="no img" />
+        ) : props.id === 2 ? (
           <img className="camper-image" src={secondPlace} alt="no img" />
         ) : props.id === 3 ? (
           <img className="camper-image" src={thirdPlace} alt="no img" />
         ) : (
           props.id
-        )}
+        ))}
       </td>
 
       <td align="left">
