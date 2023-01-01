@@ -1,4 +1,5 @@
 import logo from "./logo.png";
+import Spinner from "./Components/Spinner/index";
 
 import leaderboardBg from "./images/leaderboardBackground.jpg";
 import Table from "./Components/Table/Table";
@@ -6,46 +7,68 @@ import firstPlace from "./images/firstPlace.jpg";
 import { db } from "./firebase";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-// https://res.cloudinary.com/shulgirit/image/upload/v1641896455/wiply/Platform%20Default%20Images/background.jpg
+
 
 function App() {
   const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // This creates reference to firebase firestores collection of player documents
-    const getPlayers = async () => {
-      let params = new URLSearchParams(document.location.search);
+    //  console.log(gapi.client)
+    let params = new URLSearchParams(document.location.search);
 
-      const collectionRef = collection(
-        db,
-        "games",
-        params.get("gameId"),
-        "players"
-      );
-      // This makes actual query to the firestore database
-      const querySnapShot = await getDocs(collectionRef);
+    const id = params.get("gameId")
 
-      setPlayers(
-        querySnapShot.docs
-          .map((doc) => {
-            const player = doc.data();
-            return {
-              username: player.name,
-              score: player.score,
-              email: player.email,
-            };
-          })
-          .filter(
-            (player) => player.name != undefined || player.score != undefined
-          )
-          .sort((playerA, playerB) => playerB.score - playerA.score)
-      );
-    };
-    getPlayers();
-
-    return () => {};
+      setTimeout(() => {
+        getValues(
+          window.client,
+          "1gowLOYDNh91TJdiw99aFbsAmtHZuoQBH-mJtnPjanJ8",
+          "Sheet1",
+          null
+        );
+        setLoading(false)
+        
+      }, 1000);
   }, []);
+
+  function getValues(client, spreadsheetId, range, callback) {
+    try {
+      console.log(client);
+      client.sheets.spreadsheets.values
+        .get({
+          spreadsheetId: spreadsheetId,
+          range: range,
+        })
+        .then((response) => {
+          const result = response.result.values;
+          console.log(result);
+
+          // organize player leaderboards
+          result.shift()
+
+          setPlayers(
+            result
+              .map((player) => {
+                return {
+                  username: player[0],
+                  score: player[2],
+                };
+              })
+              .sort((playerA, playerB) => playerB.score - playerA.score)
+          );
+
+          const numRows = result.values ? result.values.length : 0;
+          console.log(`${numRows} rows retrieved.`);
+          if (callback) callback(response);
+        });
+    } catch (err) {
+      console.log(err.message);
+      return;
+    }
+  }
   return (
-    <div
+    loading ? <Spinner/> : <div
       className="App h-screen"
       style={{
         backgroundImage: `url(${leaderboardBg})`,
